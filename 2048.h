@@ -5,16 +5,26 @@
 #include <string>
 #include <iostream>
 #include <random>
+#include <cstring>
+#include <exception>
 
-template<typename T>
-T pow(T initialNumber, unsigned int quantity){
-    T toReturn = 1;
+class Exception2048 final: public std::exception{
+public:
 
-    for(unsigned int i = 1; i <= quantity; ++i)
-        toReturn *= initialNumber;
+    Exception2048(const char* ptr){
+        std::strcpy(cause, ptr);
+    }
 
-    return toReturn;
-}
+    virtual ~Exception2048() = default;
+
+    virtual const char* what() const noexcept override{
+        return cause;
+    }
+
+
+private:
+    mutable char* cause;
+};
 
 class Grid2048{
 public:
@@ -28,23 +38,58 @@ public:
 
     int operator[] (int oldschool) const;
 
-    Grid2048& createGridItem();
+    Grid2048& generateSquare();
 
     int* begin();
 
     int* end();
 
-    void moveRight();
+    void move(int direction){
+        bool hasMoved;
 
-    void moveLeft();
+        switch (direction) {
+        case LEFT:
+            hasMoved = moveLeft();
+            break;
 
-    void moveDown();
+        case RIGHT:
+            hasMoved = moveRight();
+            break;
 
-    void moveUp();
+        case UP:
+            hasMoved = moveUp();
+            break;
+
+        case DOWN:
+            hasMoved = moveDown();
+            break;
+
+        default:
+            throw Exception2048("unknown move option");
+        }
+
+        //
+        generateSquare();
+    }
+
+    bool moveRight() noexcept;
+
+    bool moveLeft() noexcept;
+
+    bool moveDown() noexcept;
+
+    bool moveUp() noexcept;
 
     unsigned int getScore() const;
 
     const int x, y;
+
+    enum direction{
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN
+    };
 
 private:
     unsigned int score;

@@ -10,12 +10,7 @@ Grid2048::Grid2048(int xIn, int yIn):
 }
 
 Grid2048::~Grid2048(){
-    try{
-        delete table;
-    }
-    catch(...){
-        std::cout << 122;
-    }
+    delete[] table;
 }
 
 int &Grid2048::operator()(int y, int x){
@@ -39,7 +34,7 @@ int Grid2048::operator[](int oldschool) const{
     return table[oldschool];
 }
 
-Grid2048 &Grid2048::createGridItem(){
+Grid2048 &Grid2048::generateSquare(){
     static std::random_device rd;
     static std::mt19937 mt{rd()};
 
@@ -79,7 +74,7 @@ int *Grid2048::end(){
     return (table + (x * y));
 }
 
-void Grid2048::moveLeft(){
+bool Grid2048::moveLeft() noexcept{
 
     //move everything left
     for(int yi=0; yi < y; ++yi){
@@ -116,9 +111,11 @@ void Grid2048::moveLeft(){
             }
         }
     }
+
+    return true;
 }
 
-void Grid2048::moveDown(){
+bool Grid2048::moveDown() noexcept{
     //move down
     for(int xi=0; xi < x; xi++){
         for(int yi=1; yi < y; yi++){
@@ -149,9 +146,11 @@ void Grid2048::moveDown(){
             }
         }
     }
+
+    return true;
 }
 
-void Grid2048::moveRight(){
+bool Grid2048::moveRight() noexcept{
     //move everything right
     for(int yi=0; yi < y; ++yi){
         for(int xi=0; xi < (x - 1); ++xi){
@@ -185,9 +184,11 @@ void Grid2048::moveRight(){
             }
         }
     }
+
+    return true;
 }
 
-void Grid2048::moveUp(){
+bool Grid2048::moveUp() noexcept{
 
     //move everything up
     for(int xi=0; xi < x; ++xi){
@@ -222,6 +223,8 @@ void Grid2048::moveUp(){
             }
         }
     }
+
+    return true;
 }
 
 unsigned int Grid2048::getScore() const{
