@@ -46,8 +46,7 @@ int main(){
 
     wrefresh(stdscr);
 
-    grid.generateSquare();
-    grid.generateSquare();
+    grid.generateSquare().generateSquare();
 
     mvaddstr(0, 5, "Score:");
     mvprintw(1, 6, "%d", grid.getScore());

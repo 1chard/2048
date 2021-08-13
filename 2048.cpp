@@ -1,4 +1,5 @@
 #include "2048.h"
+#include <ctime>
 
 Grid2048::Grid2048(int xIn, int yIn):
     x(xIn), y(yIn) //check if not 9 tiles wide, note it would allow 1*9 grids
@@ -35,12 +36,11 @@ int Grid2048::operator[](int oldschool) const{
     return table[oldschool];
 }
 
-Grid2048 &Grid2048::generateSquare(){
-    static std::random_device rd;
-    static std::mt19937 mt{rd()};
-    static std::uniform_int_distribution<> gridPosition(0, (x * y) - 1);
-    static std::uniform_int_distribution<> chanceOfBe4(0, 99); //1%
+Grid2048& Grid2048::generateSquare(){
+    static std::mt19937 mt{ (std::mt19937::result_type)std::time(0)};
 
+    std::uniform_int_distribution<> gridPosition(0, (x * y) - 1);
+    std::uniform_int_distribution<> chanceOfBe4(0, 99); //1%
     int randNumber = gridPosition(mt);
     int copy = randNumber;
 
@@ -55,7 +55,6 @@ Grid2048 &Grid2048::generateSquare(){
             table[randNumber] = ((chanceOfBe4(mt))? 2 : 4);
             return *this;
         }
-
     }
     while(randNumber != copy);
 
@@ -74,11 +73,11 @@ bool Grid2048::moveLeft() noexcept{
 
     //move everything left
     for(int yi=0; yi < y; ++yi){
-        for(int xi=1; xi < x; ++xi){
-            if((operator()(yi, xi) > 0) && (operator()(yi, xi - 1) == 0)){
-                operator()(yi, xi - 1) = operator()(yi, xi);
-                operator()(yi, xi) = 0;
-                xi = 0; //note, this move back to beggining of line
+        for(int xi=0; xi < (x - 1); ++xi){
+            if((operator()(yi, xi) == 0) && (operator()(yi, xi + 1) > 0)){
+                operator()(yi, xi) = operator()(yi, xi + 1);
+                operator()(yi, xi + 1) = 0;
+                xi = -1;//note, this move back to beggining of line
             }
         }
     }
@@ -90,20 +89,14 @@ bool Grid2048::moveLeft() noexcept{
                 operator()(yi, xi) *= 2;
                 operator()(yi, xi + 1) = 0;
                 score += operator()(yi, xi);
-                xi++; //this is an optization
 
-
-            }
-        }
-    }
-
-    //move everything left again
-    for(int yi=0; yi < y; ++yi){
-        for(int xi=1; xi < x; ++xi){
-            if((operator()(yi, xi) > 0) && (operator()(yi, xi - 1) == 0)){
-                operator()(yi, xi - 1) = operator()(yi, xi);
-                operator()(yi, xi) = 0;
-                xi = 1; //note, this move back to beggining of line
+                //move everything left if there is a square sum
+                for(int i=(xi + 1); i < (x - 1); ++i){
+                    if((operator()(yi, i) == 0) && (operator()(yi, i + 1) > 0)){
+                        operator()(yi, i) = operator()(yi, i + 1);
+                        operator()(yi, i + 1) = 0;
+                    }
+                }
             }
         }
     }
@@ -114,11 +107,11 @@ bool Grid2048::moveLeft() noexcept{
 bool Grid2048::moveDown() noexcept{
     //move down
     for(int xi=0; xi < x; xi++){
-        for(int yi=1; yi < y; yi++){
-            if((operator()(yi - 1, xi) > 0) && (operator()(yi, xi) == 0)){
-                operator()(yi, xi) = operator()(yi - 1, xi);
-                operator()(yi - 1, xi) = 0;
-                yi = 0;
+        for(int yi=0; yi < (y - 1); yi++){
+            if((operator()(yi, xi) > 0) && (operator()(yi + 1, xi) == 0)){
+                operator()(yi + 1, xi) = operator()(yi, xi);
+                operator()(yi, xi) = 0;
+                yi = -1;
             }
         }
     }
@@ -129,16 +122,13 @@ bool Grid2048::moveDown() noexcept{
                 operator()(yi, xi) *= 2;
                 operator()(yi - 1, xi) = 0;
                 score += operator()(yi, xi);
-            }
-        }
-    }
-
-    for(int xi=0; xi < x; xi++){
-        for(int yi=1; yi < y; yi++){
-            if((operator()(yi - 1, xi) > 0) && (operator()(yi, xi) == 0)){
-                operator()(yi, xi) = operator()(yi - 1, xi);
-                operator()(yi - 1, xi) = 0;
-                yi = 0;
+                //move everything down if there is a square sum, runs inverse
+                for(int i=(yi - 1); i >= 0; --i){
+                    if((operator()(i, xi) > 0) && (operator()(i + 1, xi) == 0)){
+                        operator()(i + 1, xi) = operator()(i, xi);
+                        operator()(i, xi) = 0;
+                    }
+                }
             }
         }
     }
@@ -165,18 +155,13 @@ bool Grid2048::moveRight() noexcept{
                 operator()(yi, xi) *= 2;
                 operator()(yi, xi - 1) = 0;
                 score += operator()(yi, xi);
-            }
-        }
-    }
-
-
-    //move everything right again
-    for(int yi=0; yi < y; ++yi){
-        for(int xi=0; xi < (x - 1); ++xi){
-            if((operator()(yi, xi) > 0) && (operator()(yi, xi + 1) == 0)){
-                operator()(yi, xi + 1) = operator()(yi, xi);
-                operator()(yi, xi) = 0;
-                xi = -1; //note, this move back to beggining of line
+                //move everything right if there is a square sum, runs inverse
+                for(int i=(xi - 1); i >= 0; --i){
+                    if((operator()(yi, i) > 0) && (operator()(yi, i + 1) == 0)){
+                        operator()(yi, i + 1) = operator()(yi, i);
+                        operator()(yi, i) = 0;
+                    }
+                }
             }
         }
     }
@@ -188,11 +173,11 @@ bool Grid2048::moveUp() noexcept{
 
     //move everything up
     for(int xi=0; xi < x; ++xi){
-        for(int yi=1; yi < y; ++yi){
-            if((operator()(yi, xi) > 0) && (operator()(yi - 1, xi) == 0)){
-                operator()(yi - 1, xi) = operator()(yi, xi);
-                operator()(yi, xi) = 0;
-                yi = 0; //note, this move back to beggining of line
+        for(int yi=0; yi < (y - 1); ++yi){
+            if((operator()(yi + 1, xi) > 0) && (operator()(yi, xi) == 0)){
+                operator()(yi, xi) = operator()(yi + 1, xi);
+                operator()(yi + 1, xi) = 0;
+                yi = -1; //note, this move back to beggining of line
             }
         }
     }
@@ -204,18 +189,13 @@ bool Grid2048::moveUp() noexcept{
                 operator()(yi, xi) *= 2;
                 operator()(yi + 1, xi) = 0;
                 score += operator()(yi, xi);
-                yi++; //this is an optization
-
-            }
-        }
-    }
-
-    for(int xi=0; xi < x; ++xi){
-        for(int yi=1; yi < y; ++yi){
-            if((operator()(yi, xi) > 0) && (operator()(yi - 1, xi) == 0)){
-                operator()(yi - 1, xi) = operator()(yi, xi);
-                operator()(yi, xi) = 0;
-                xi = 0; //note, this move back to beggining of line
+                //move everything up if there is a square sum
+                for(int i=(yi + 1); i < (y - 1); ++i){
+                    if((operator()(i + 1, xi) > 0) && (operator()(i, xi) == 0)){
+                        operator()(i, xi) = operator()(i + 1, xi);
+                        operator()(i + 1, xi) = 0;
+                    }
+                }
             }
         }
     }
