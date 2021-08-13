@@ -11,6 +11,7 @@ Grid2048::Grid2048(int xIn, int yIn):
 
 Grid2048::~Grid2048(){
     delete[] table;
+    std::cout << "destroyed grid";
 }
 
 int &Grid2048::operator()(int y, int x){
@@ -37,33 +38,28 @@ int Grid2048::operator[](int oldschool) const{
 Grid2048 &Grid2048::generateSquare(){
     static std::random_device rd;
     static std::mt19937 mt{rd()};
-
-    std::uniform_int_distribution<> gridPosition(0, (x * y) - 1);
-    std::uniform_int_distribution<> chanceOfBe4(0, 99); //1%
+    static std::uniform_int_distribution<> gridPosition(0, (x * y) - 1);
+    static std::uniform_int_distribution<> chanceOfBe4(0, 99); //1%
 
     int randNumber = gridPosition(mt);
-    if(table[randNumber] > 0){
-        int copy = randNumber;
+    int copy = randNumber;
 
-        do{
-            randNumber++;
-            if(randNumber == x * y)
-                randNumber = -1;
-
-            if(table[randNumber] == 0){
-                table[randNumber] = ((chanceOfBe4(mt))? 2 : 4);
-                return *this;
-            }
-
+    do{
+        randNumber++;
+        if(randNumber == x * y){
+            randNumber = -1;
+            continue;
         }
-        while(randNumber != copy);
 
-        throw std::runtime_error("cant write a square, game over");
+        if(table[randNumber] == 0){
+            table[randNumber] = ((chanceOfBe4(mt))? 2 : 4);
+            return *this;
+        }
+
     }
-    else
-        table[randNumber] = ((chanceOfBe4(mt))? 2 : 4);
+    while(randNumber != copy);
 
-    return *this;
+    throw std::runtime_error("cant write a square, game over");
 }
 
 int *Grid2048::begin(){

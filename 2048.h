@@ -8,24 +8,6 @@
 #include <cstring>
 #include <exception>
 
-class Exception2048 final: public std::exception{
-public:
-
-    Exception2048(const char* ptr){
-        std::strcpy(cause, ptr);
-    }
-
-    virtual ~Exception2048() = default;
-
-    virtual const char* what() const noexcept override{
-        return cause;
-    }
-
-
-private:
-    mutable char* cause;
-};
-
 class Grid2048{
 public:
     Grid2048(int xIn=4, int yIn=4);
@@ -65,10 +47,9 @@ public:
             break;
 
         default:
-            throw Exception2048("unknown move option");
+            throw std::runtime_error("unknown move option");
         }
 
-        //
         generateSquare();
     }
 
@@ -92,7 +73,7 @@ public:
     };
 
 private:
-    unsigned int score;
+    unsigned int score = 0;
     int* table;
 };
 

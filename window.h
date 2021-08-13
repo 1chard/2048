@@ -4,7 +4,6 @@
 #define DJKAPERMCXZ_H
 
 extern int returnOverall;
-extern Grid2048 grid;
 extern WINDOW* gameWindow;
 
 enum ColorsPair{
@@ -24,8 +23,8 @@ enum ColorsExtra{
 };
 
 void drawWindow(const Grid2048&);
-void moveWindow(const Grid2048&);
-void updateWindow(const Grid2048&);
+void moveWindow(WINDOW*, const Grid2048&);
+void updateWindow(WINDOW*, const Grid2048&);
 void pauseWindow(void);
 
 const int KEY_ESC = 278;

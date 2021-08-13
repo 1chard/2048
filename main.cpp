@@ -4,6 +4,8 @@
 #include <csignal>
 
 int main(){
+    static Grid2048 grid;
+
     {
         int result = std::atexit( []() -> void{
             //delwin(gameWindow);
@@ -27,7 +29,6 @@ int main(){
     keypad(stdscr, true);
     start_color();
 
-    drawWindow(grid);
     //gameWindow = newwin(1 + (4 * grid.y), 1 + (7 * grid.x), 2, 2);
 
     init_color(COLOR_ORANGE, 1000, 600, 0);
@@ -45,16 +46,15 @@ int main(){
 
     wrefresh(stdscr);
 
-
-    drawWindow(grid);
-
     grid.generateSquare();
     grid.generateSquare();
 
     mvaddstr(0, 5, "Score:");
     mvprintw(1, 6, "%d", grid.getScore());
 
-    updateWindow(grid);
+
+    drawWindow(grid);
+    updateWindow(gameWindow, grid);
 
 
     int input;
@@ -81,7 +81,7 @@ int main(){
             grid.move(Grid2048::DOWN);
             break;
         case KEY_RESIZE:
-            moveWindow(grid);
+            moveWindow(gameWindow, grid);
             continue;
         case 10:
             pauseWindow();
@@ -92,7 +92,7 @@ int main(){
 
 
         mvprintw(1, 6, "%d", grid.getScore());
-        updateWindow(grid);
+        updateWindow(gameWindow, grid);
     }
 
 }

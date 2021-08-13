@@ -1,34 +1,35 @@
 #include "window.h"
+#define NULL __null
 
 int returnOverall = 0;
-Grid2048 grid;
-WINDOW* gameWindow;
+WINDOW* gameWindow = NULL;
 
 void drawGridBorder(WINDOW*, const Grid2048&);
 void drawValues(WINDOW*, const Grid2048&);
 
-void updateWindow(const Grid2048& grid){
-    drawValues(gameWindow, grid);
-    wrefresh(gameWindow);
+void updateWindow(WINDOW* window, const Grid2048& grid){
+    drawValues(window, grid);
+    wrefresh(window);
 }
 
 void drawWindow(const Grid2048& grid){
+    delwin(gameWindow); //safe
     gameWindow = newwin(1 + (4 * grid.y), 1 + (7 * grid.x), 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
     drawGridBorder(gameWindow, grid);
-    updateWindow(grid);
+    updateWindow(gameWindow, grid);
 }
 
-void moveWindow(const Grid2048& grid){
-    mvwin(gameWindow, 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
+void moveWindow(WINDOW* window, const Grid2048& grid){
+    mvwin(window, 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
 
-    wclear(gameWindow);
+    wclear(window);
     wclear(stdscr);
 
     wrefresh(stdscr);
 
-    drawGridBorder(gameWindow, grid);
-    drawValues(gameWindow, grid);
-    wrefresh(gameWindow);
+    drawGridBorder(window, grid);
+    drawValues(window, grid);
+    wrefresh(window);
 }
 
 void drawGridBorder(WINDOW* window, const Grid2048& gridTarget){
@@ -194,5 +195,5 @@ void pauseWindow(){
     }
 
 
-    moveWindow(grid);
+    //moveWindow(grid);
 }
