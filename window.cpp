@@ -12,11 +12,14 @@ void updateWindow(WINDOW* window, const Grid2048& grid){
     wrefresh(window);
 }
 
-void drawWindow(const Grid2048& grid){
-    delwin(gameWindow); //safe
-    gameWindow = newwin(1 + (4 * grid.y), 1 + (7 * grid.x), 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
-    drawGridBorder(gameWindow, grid);
-    updateWindow(gameWindow, grid);
+WINDOW* drawWindow(const Grid2048& grid){
+    WINDOW* toReturn = NULL;
+    //    delwin(gameWindow); //safe
+    toReturn = newwin(1 + (4 * grid.y), 1 + (7 * grid.x), 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
+    drawGridBorder(toReturn, grid);
+    updateWindow(toReturn, grid);
+
+    return toReturn;
 }
 
 void moveWindow(WINDOW* window, const Grid2048& grid){
@@ -33,10 +36,11 @@ void moveWindow(WINDOW* window, const Grid2048& grid){
 }
 
 void drawGridBorder(WINDOW* window, const Grid2048& gridTarget){
-    wattron(gameWindow, COLOR_PAIR(P_BLUE) | A_BOLD);
+    wattron(window, COLOR_PAIR(P_BLUE) | A_BOLD);
     //first create left border
     {
-        waddch(window, ACS_ULCORNER);
+
+        mvwaddch(window, 0, 0, ACS_ULCORNER);
 
         int i=0;
         for(; i < (4 * gridTarget.y); ++i){
@@ -90,7 +94,7 @@ void drawGridBorder(WINDOW* window, const Grid2048& gridTarget){
         mvwaddch(window, (4 * Yi), (Xi * 7), ACS_LRCORNER);
     }
 
-    wattroff(gameWindow, COLOR_PAIR(P_BLUE) | A_BOLD);
+    wattroff(window, COLOR_PAIR(P_BLUE) | A_BOLD);
 }
 
 void clearValue(WINDOW* window, int y, int x){
@@ -172,28 +176,11 @@ void drawValues(WINDOW* window, const Grid2048& grid){
 
                 break;
             default:
-
+                wattron(window, COLOR_PAIR(P_BLUE) | A_BOLD);
+                mvwprintw(window, 2 + (y * 4), 2 + (x * 7), "%d", grid(y, x));
+                wattroff(window, COLOR_PAIR(P_BLUE) | A_BOLD);
                 break;
             }
         }
     }
-}
-
-void pauseWindow(){
-    wclear(gameWindow);
-    clear();
-
-    mvaddstr((getmaxy(stdscr) - 2) / 2, getmaxx(stdscr) / 2, "PAUSe");
-
-    wrefresh(gameWindow);
-    refresh();
-
-    int input = getch();
-    while(input == 20){
-            input = getch();
-            printw("fff");
-    }
-
-
-    //moveWindow(grid);
 }

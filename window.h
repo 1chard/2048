@@ -22,11 +22,8 @@ enum ColorsExtra{
     COLOR_DARKBLUE
 };
 
-void drawWindow(const Grid2048&);
+WINDOW* drawWindow(const Grid2048&);
 void moveWindow(WINDOW*, const Grid2048&);
 void updateWindow(WINDOW*, const Grid2048&);
-void pauseWindow(void);
-
-const int KEY_ESC = 278;
 
 #endif // DJKAPERMCXZ_H

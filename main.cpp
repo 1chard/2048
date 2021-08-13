@@ -53,7 +53,7 @@ int main(){
     mvprintw(1, 6, "%d", grid.getScore());
 
 
-    drawWindow(grid);
+    gameWindow = drawWindow(grid);
     updateWindow(gameWindow, grid);
 
 
@@ -83,8 +83,6 @@ int main(){
         case KEY_RESIZE:
             moveWindow(gameWindow, grid);
             continue;
-        case 10:
-            pauseWindow();
         default:
             //try again
             continue;
