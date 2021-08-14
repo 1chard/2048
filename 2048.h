@@ -1,12 +1,9 @@
 #ifndef YSJCLSLCX_H
 #define YSJCLSLCX_H
 
-#include <ncurses/curses.h>
-#include <string>
-#include <iostream>
 #include <random>
-#include <cstring>
-#include <exception>
+#include <stdexcept>
+#include <cassert>
 
 class Grid2048{
 public:
@@ -26,32 +23,7 @@ public:
 
     int* end();
 
-    void move(int direction){
-        bool hasMoved;
-
-        switch (direction) {
-        case LEFT:
-            hasMoved = moveLeft();
-            break;
-
-        case RIGHT:
-            hasMoved = moveRight();
-            break;
-
-        case UP:
-            hasMoved = moveUp();
-            break;
-
-        case DOWN:
-            hasMoved = moveDown();
-            break;
-
-        default:
-            throw std::runtime_error("unknown move option");
-        }
-
-        generateSquare();
-    }
+    void move(int direction);
 
     bool moveRight() noexcept;
 
@@ -63,7 +35,7 @@ public:
 
     unsigned int getScore() const;
 
-    const int x, y;
+    const int _x, _y;
 
     enum direction{
         LEFT,
@@ -73,8 +45,8 @@ public:
     };
 
 private:
-    unsigned int score = 0;
-    int* table;
+    unsigned int _score = 0;
+    int* _table;
 };
 
 #endif // YSJCLSLCX_H

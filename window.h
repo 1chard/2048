@@ -1,10 +1,10 @@
-#include "2048.h"
-
 #ifndef DJKAPERMCXZ_H
 #define DJKAPERMCXZ_H
 
+#include "2048.h"
+#include <ncurses/curses.h>
+
 extern int returnOverall;
-extern WINDOW* gameWindow;
 
 enum ColorsPair{
     P_RED = 1,
@@ -12,7 +12,8 @@ enum ColorsPair{
     P_BLUE,
     P_MAGENTA,
     P_YELLOW,
-    P_ORANGE,
+
+    P_ORANGE = 64,
     P_LIGHTBLUE,
     P_DARKBLUE
 };

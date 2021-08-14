@@ -1,8 +1,7 @@
 #include "window.h"
-#define NULL __null
+#define NULL __null //idk why qt creator is saying NULL is undefined
 
 int returnOverall = 0;
-WINDOW* gameWindow = NULL;
 
 void drawGridBorder(WINDOW*, const Grid2048&);
 void drawValues(WINDOW*, const Grid2048&);
@@ -13,9 +12,9 @@ void updateWindow(WINDOW* window, const Grid2048& grid){
 }
 
 WINDOW* drawWindow(const Grid2048& grid){
-    WINDOW* toReturn = NULL;
+    WINDOW* toReturn;
     //    delwin(gameWindow); //safe
-    toReturn = newwin(1 + (4 * grid.y), 1 + (7 * grid.x), 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
+    toReturn = newwin(1 + (4 * grid._y), 1 + (7 * grid._x), 2, (getmaxx(stdscr) - (7 * grid._x))/ 2);
     drawGridBorder(toReturn, grid);
     updateWindow(toReturn, grid);
 
@@ -23,7 +22,7 @@ WINDOW* drawWindow(const Grid2048& grid){
 }
 
 void moveWindow(WINDOW* window, const Grid2048& grid){
-    mvwin(window, 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
+    mvwin(window, 2, (getmaxx(stdscr) - (7 * grid._x))/ 2);
 
     wclear(window);
     wclear(stdscr);
@@ -43,7 +42,7 @@ void drawGridBorder(WINDOW* window, const Grid2048& gridTarget){
         mvwaddch(window, 0, 0, ACS_ULCORNER);
 
         int i=0;
-        for(; i < (4 * gridTarget.y); ++i){
+        for(; i < (4 * gridTarget._y); ++i){
             if(i % 4 != 3)
                 mvwaddch(window, i + 1, 0, ACS_VLINE);
             else
@@ -56,7 +55,7 @@ void drawGridBorder(WINDOW* window, const Grid2048& gridTarget){
     {
 
         int i=0;
-        for(; i < (7 * gridTarget.x); i++){
+        for(; i < (7 * gridTarget._x); i++){
             if(i % 7 != 6)
                 mvwaddch(window, 0, i + 1, ACS_HLINE);
             else
@@ -70,8 +69,8 @@ void drawGridBorder(WINDOW* window, const Grid2048& gridTarget){
     {
         int Yi=0, Xi=0;
 
-        for(; Yi < gridTarget.y; Yi++){
-            for(; Xi < gridTarget.x; Xi++){
+        for(; Yi < gridTarget._y; Yi++){
+            for(; Xi < gridTarget._x; Xi++){
                 mvwaddch(window, 1 + (4 * Yi), 7 + (7 * Xi), ACS_VLINE);
                 mvwaddch(window, 2 + (4 * Yi), 7 + (7 * Xi), ACS_VLINE);
                 mvwaddch(window, 3 + (4 * Yi), 7 + (7 * Xi), ACS_VLINE);
@@ -87,7 +86,7 @@ void drawGridBorder(WINDOW* window, const Grid2048& gridTarget){
             Xi = 0;
         }
 
-        for(Xi = 1; Xi < gridTarget.x; Xi++){
+        for(Xi = 1; Xi < gridTarget._x; Xi++){
             mvwaddch(window, (4 * Yi), (Xi * 7), ACS_BTEE);
         }
 
@@ -102,8 +101,8 @@ void clearValue(WINDOW* window, int y, int x){
 }
 
 void drawValues(WINDOW* window, const Grid2048& grid){
-    for(int y=0; y < grid.y; ++y){
-        for(int x=0; x < grid.x; ++x){
+    for(int y=0; y < grid._y; ++y){
+        for(int x=0; x < grid._x; ++x){
             clearValue(window, y, x);
 
             switch (grid(y, x)) {

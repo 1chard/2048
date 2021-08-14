@@ -1,14 +1,15 @@
 #include "2048.h"
 #include "window.h"
-#include <thread>
 #include <csignal>
+#include <iostream>
 
 int main(){
     static Grid2048 grid;
+    static WINDOW* gameWindow;
 
     {
         int result = std::atexit( []() -> void{
-            //delwin(gameWindow);
+            delwin(gameWindow);
             endwin();
         });
 
@@ -28,8 +29,6 @@ int main(){
     curs_set(0);
     keypad(stdscr, true);
     start_color();
-
-    //gameWindow = newwin(1 + (4 * grid.y), 1 + (7 * grid.x), 2, 2);
 
     init_color(COLOR_ORANGE, 1000, 600, 0);
     init_color(COLOR_LIGHTBLUE, 500, 1000, 1000);
@@ -54,7 +53,6 @@ int main(){
 
     gameWindow = drawWindow(grid);
     updateWindow(gameWindow, grid);
-
 
     int input;
     //main loop
