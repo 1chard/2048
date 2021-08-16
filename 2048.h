@@ -11,9 +11,9 @@ public:
 
     ~Grid2048();
 
-    int& operator() (int y, int x);
+    int& operator() (int, int);
 
-    int operator() (int y, int x) const;
+    int operator() (int, int) const;
 
     int operator[] (int oldschool) const;
 
@@ -35,7 +35,7 @@ public:
 
     unsigned int getScore() const;
 
-    const int _x, _y;
+    const int x, y;
 
     enum direction{
         LEFT,

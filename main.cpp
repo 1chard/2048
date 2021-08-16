@@ -50,7 +50,6 @@ int main(){
     mvaddstr(0, 5, "Score:");
     mvprintw(1, 6, "%d", grid.getScore());
 
-
     gameWindow = drawWindow(grid);
     updateWindow(gameWindow, grid);
 
@@ -58,7 +57,6 @@ int main(){
     //main loop
     while(true){
         input = getch();
-
 
 
         mvprintw(1, 1, "%d", input);
@@ -84,7 +82,6 @@ int main(){
             //try again
             continue;
         }
-
 
         mvprintw(1, 6, "%d", grid.getScore());
         updateWindow(gameWindow, grid);

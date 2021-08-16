@@ -2,34 +2,34 @@
 #include <ctime>
 
 Grid2048::Grid2048(int xIn, int yIn):
-    _x(xIn), _y(yIn) //check if not 9 tiles wide, note it would allow 1*9 grids
+    x(xIn), y(yIn) //check if not 9 tiles wide, note it would allow 1*9 grids
 {
-    if((_x * _y) < 9)
+    if((x * y) < 9)
         throw std::runtime_error("not enough space for a game");
 
-    _table = new int[_x * _y];
+    _table = new int[x * y];
 }
 
 Grid2048::~Grid2048(){
     delete[] _table;
 }
 
-int &Grid2048::operator()(int y, int x){
-    if( (x < 0) || (y < 0) || (x >= _x) || (y >= _y))
+int &Grid2048::operator()(int yIn, int xIn){
+    if( (xIn < 0) || (yIn < 0) || (xIn >= x) || (yIn >= y))
         throw std::runtime_error("Not a value index");
 
-    return _table[(y * _x) + x - 1];
+    return _table[(yIn * x) + xIn];
 }
 
-int Grid2048::operator()(int y, int x) const{
-    if( (x < 0) || (y < 0) || (x >= _x) || (y >= _y))
+int Grid2048::operator()(int yIn, int xIn) const{
+    if( (xIn < 0) || (yIn < 0) || (xIn >= x) || (yIn >= y))
         throw std::runtime_error("Not a value index");
 
-    return _table[(y * _x) + x - 1];
+    return _table[(yIn * x) + xIn];
 }
 
 int Grid2048::operator[](int oldschool) const{
-    if(oldschool < 0 || oldschool >= (_x * _y) )
+    if(oldschool < 0 || oldschool >= (x * y) )
         throw std::runtime_error("Not a value index");
 
     return _table[oldschool];
@@ -38,14 +38,14 @@ int Grid2048::operator[](int oldschool) const{
 Grid2048& Grid2048::generateSquare(){
     static std::mt19937 mt{ (std::mt19937::result_type)std::time(0)};
 
-    std::uniform_int_distribution<> gridPosition(0, (_x * _y) - 1);
+    std::uniform_int_distribution<> gridPosition(0, (x * y) - 1);
     std::uniform_int_distribution<> chanceOfBe4(0, 99); //1%
     int randNumber = gridPosition(mt);
     int copy = randNumber;
 
     do{
         randNumber++;
-        if(randNumber == _x * _y){
+        if(randNumber == x * y){
             randNumber = -1;
             continue;
         }
@@ -65,7 +65,7 @@ int *Grid2048::begin(){
 }
 
 int *Grid2048::end(){
-    return (_table + (_x * _y));
+    return (_table + (x * y));
 }
 
 void Grid2048::move(int direction){
@@ -99,8 +99,8 @@ bool Grid2048::moveLeft() noexcept{
     try{
 
         //move everything left
-        for(int yi=0; yi < _y; ++yi){
-            for(int xi=0; xi < (_x - 1); ++xi){
+        for(int yi=0; yi < y; ++yi){
+            for(int xi=0; xi < (x - 1); ++xi){
                 if((operator()(yi, xi) == 0) && (operator()(yi, xi + 1) > 0)){
                     operator()(yi, xi) = operator()(yi, xi + 1);
                     operator()(yi, xi + 1) = 0;
@@ -110,15 +110,15 @@ bool Grid2048::moveLeft() noexcept{
         }
 
         //sum squares
-        for(int yi=0; yi < _y; ++yi){
-            for(int xi=0; xi < (_x - 1); ++xi){
+        for(int yi=0; yi < y; ++yi){
+            for(int xi=0; xi < (x - 1); ++xi){
             if(operator()(yi, xi) == operator()(yi, xi + 1)){
                 operator()(yi, xi) *= 2;
                 operator()(yi, xi + 1) = 0;
                 _score += operator()(yi, xi);
 
                 //move everything left if there is a square sum
-                for(int i=(xi + 1); i < (_x - 1); ++i){
+                for(int i=(xi + 1); i < (x - 1); ++i){
                     if((operator()(yi, i) == 0) && (operator()(yi, i + 1) > 0)){
                         operator()(yi, i) = operator()(yi, i + 1);
                         operator()(yi, i + 1) = 0;
@@ -140,8 +140,8 @@ bool Grid2048::moveDown() noexcept{
     try{
 
     //move down
-    for(int xi=0; xi < _x; xi++){
-        for(int yi=0; yi < (_y - 1); yi++){
+    for(int xi=0; xi < x; xi++){
+        for(int yi=0; yi < (y - 1); yi++){
             if((operator()(yi, xi) > 0) && (operator()(yi + 1, xi) == 0)){
                 operator()(yi + 1, xi) = operator()(yi, xi);
                 operator()(yi, xi) = 0;
@@ -150,8 +150,8 @@ bool Grid2048::moveDown() noexcept{
         }
     }
 
-    for(int xi=0; xi < _y; ++xi){
-        for(int yi=(_y - 1); yi > 0; --yi){
+    for(int xi=0; xi < y; ++xi){
+        for(int yi=(y - 1); yi > 0; --yi){
             if(operator()(yi, xi) == operator()(yi - 1, xi)){
                 operator()(yi, xi) *= 2;
                 operator()(yi - 1, xi) = 0;
@@ -179,8 +179,8 @@ bool Grid2048::moveRight() noexcept{
     try{
 
     //move everything right
-    for(int yi=0; yi < _y; ++yi){
-        for(int xi=0; xi < (_x - 1); ++xi){
+    for(int yi=0; yi < y; ++yi){
+        for(int xi=0; xi < (x - 1); ++xi){
             if((operator()(yi, xi) > 0) && (operator()(yi, xi + 1) == 0)){
                 operator()(yi, xi + 1) = operator()(yi, xi);
                 operator()(yi, xi) = 0;
@@ -190,8 +190,8 @@ bool Grid2048::moveRight() noexcept{
     }
 
     //sum squares
-    for(int yi=0; yi < _y; ++yi){
-        for(int xi=(_x - 1); xi > 0; --xi){
+    for(int yi=0; yi < y; ++yi){
+        for(int xi=(x - 1); xi > 0; --xi){
             if(operator()(yi, xi) == operator()(yi, xi - 1)){
                 operator()(yi, xi) *= 2;
                 operator()(yi, xi - 1) = 0;
@@ -219,8 +219,8 @@ bool Grid2048::moveUp() noexcept{
     try{
 
     //move everything up
-    for(int xi=0; xi < _x; ++xi){
-        for(int yi=0; yi < (_y - 1); ++yi){
+    for(int xi=0; xi < x; ++xi){
+        for(int yi=0; yi < (y - 1); ++yi){
             if((operator()(yi + 1, xi) > 0) && (operator()(yi, xi) == 0)){
                 operator()(yi, xi) = operator()(yi + 1, xi);
                 operator()(yi + 1, xi) = 0;
@@ -230,14 +230,14 @@ bool Grid2048::moveUp() noexcept{
     }
 
     //sum squares
-    for(int xi=0; xi < _x; ++xi){
-        for(int yi=0; yi < (_y - 1); ++yi){
+    for(int xi=0; xi < x; ++xi){
+        for(int yi=0; yi < (y - 1); ++yi){
             if(operator()(yi, xi) == operator()(yi + 1, xi)){
                 operator()(yi, xi) *= 2;
                 operator()(yi + 1, xi) = 0;
                 _score += operator()(yi, xi);
                 //move everything up if there is a square sum
-                for(int i=(yi + 1); i < (_y - 1); ++i){
+                for(int i=(yi + 1); i < (y - 1); ++i){
                     if((operator()(i + 1, xi) > 0) && (operator()(i, xi) == 0)){
                         operator()(i, xi) = operator()(i + 1, xi);
                         operator()(i + 1, xi) = 0;
