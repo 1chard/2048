@@ -13,25 +13,49 @@ void updateWindow(WINDOW* window, const Grid2048& grid){
 
 WINDOW* drawWindow(const Grid2048& grid){
     WINDOW* toReturn;
-    //    delwin(gameWindow); //safe
-    toReturn = newwin(1 + (4 * grid.y), 1 + (7 * grid.x), 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
+    toReturn = newwin(1 + (4 * grid.y), 1 + (7 * grid.x), (getmaxy(stdscr) - (4 * grid.y))/ 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
     drawGridBorder(toReturn, grid);
     updateWindow(toReturn, grid);
 
     return toReturn;
 }
 
-void moveWindow(WINDOW* window, const Grid2048& grid){
-    mvwin(window, 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
+void moveWindow(WINDOW** windowPtr, const Grid2048& grid, int* inputPtr){
+    if(inputPtr == NULL)
+        throw std::runtime_error("null pointer as third argument");
 
-    wclear(window);
-    wclear(stdscr);
+    do{
+        if( (4 * grid.y + 4) < getmaxy(stdscr) && (7 * grid.x + 4) < getmaxx(stdscr) ){
+            if(*windowPtr != NULL)
+                mvwin(*windowPtr, (getmaxy(stdscr) - (4 * grid.y))/ 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
+            else
+                *windowPtr = drawWindow(grid);
+        }
+        else{
+            if(*windowPtr == NULL){
+                clear();
+                printw("Please resize window with at least %d wide long and %d height long", (7 * grid.x + 4) + 1, (4 * grid.y + 4) + 1);
+            }
+            else{
+                clear();
+                printw("Please resize window with at least %d wide long and %d height long", (7 * grid.x + 4) + 1, (4 * grid.y + 4) + 1);
+                delwin(*windowPtr);
+                *windowPtr = NULL;
+            }
+            continue;
+        }
 
-    wrefresh(stdscr);
+        wclear(*windowPtr);
+        wclear(stdscr);
 
-    drawGridBorder(window, grid);
-    drawValues(window, grid);
-    wrefresh(window);
+        wrefresh(stdscr);
+
+        drawGridBorder(*windowPtr, grid);
+        drawValues(*windowPtr, grid);
+        wrefresh(*windowPtr);
+    }
+    while(*inputPtr = getch(), *inputPtr == KEY_RESIZE);
+
 }
 
 void drawGridBorder(WINDOW* window, const Grid2048& gridTarget){

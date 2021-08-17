@@ -51,18 +51,15 @@ int main(){
     mvprintw(1, 6, "%d", grid.getScore());
 
     gameWindow = drawWindow(grid);
-    updateWindow(gameWindow, grid);
+    //updateWindow(gameWindow, grid);
 
     int input;
     //main loop
     while(true){
         input = getch();
 
-
-        mvprintw(1, 1, "%d", input);
-
+        redoWithoutGetch:;
         switch (input) {
-
         case KEY_LEFT:
             grid.move(Grid2048::LEFT);
             break;
@@ -76,8 +73,8 @@ int main(){
             grid.move(Grid2048::DOWN);
             break;
         case KEY_RESIZE:
-            moveWindow(gameWindow, grid);
-            continue;
+            moveWindow(&gameWindow, grid, &input);
+            goto redoWithoutGetch;
         default:
             //try again
             continue;
@@ -86,5 +83,4 @@ int main(){
         mvprintw(1, 6, "%d", grid.getScore());
         updateWindow(gameWindow, grid);
     }
-
 }

@@ -14,21 +14,21 @@ Grid2048::~Grid2048(){
     delete[] _table;
 }
 
-int &Grid2048::operator()(int yIn, int xIn){
+int &Grid2048::operator() (int yIn, int xIn){
     if( (xIn < 0) || (yIn < 0) || (xIn >= x) || (yIn >= y))
         throw std::runtime_error("Not a value index");
 
-    return _table[(yIn * x) + xIn];
+    return static_cast<int&>(_table[(yIn * x) + xIn]);
 }
 
-int Grid2048::operator()(int yIn, int xIn) const{
+int Grid2048::operator() (int yIn, int xIn) const{
     if( (xIn < 0) || (yIn < 0) || (xIn >= x) || (yIn >= y))
         throw std::runtime_error("Not a value index");
 
-    return _table[(yIn * x) + xIn];
+    return static_cast<int&>(_table[(yIn * x) + xIn]);
 }
 
-int Grid2048::operator[](int oldschool) const{
+int Grid2048::operator[] (int oldschool) const{
     if(oldschool < 0 || oldschool >= (x * y) )
         throw std::runtime_error("Not a value index");
 

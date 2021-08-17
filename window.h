@@ -24,7 +24,7 @@ enum ColorsExtra{
 };
 
 WINDOW* drawWindow(const Grid2048&);
-void moveWindow(WINDOW*, const Grid2048&);
+void moveWindow(WINDOW**, const Grid2048&, int*);
 void updateWindow(WINDOW*, const Grid2048&);
 
 #endif // DJKAPERMCXZ_H
