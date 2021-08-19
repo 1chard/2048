@@ -19,7 +19,7 @@ public:
 
     int operator() (int, int) const;
 
-    Grid2048& generateSquare();
+    Grid2048& generateSquare() noexcept;
 
     int* begin();
 
@@ -38,6 +38,11 @@ public:
     bool moveDown() noexcept;
 
     bool moveUp() noexcept;
+
+    bool stillPlayable() noexcept;
+
+    bool hasLost() noexcept;
+
 
     unsigned int getScore() const;
 

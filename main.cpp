@@ -55,9 +55,19 @@ int main(){
     int input;
     //main loop
     while(true){
+        if(grid.hasLost()){
+            mvaddstr(0, 0, "GAME OVER, PRESS TO EXIT");
+
+            getch();
+
+            return 0;
+        }
+
         input = getch();
 
-        redoWithoutGetch:;
+redoWithoutGetch:;
+
+
         switch (input) {
         case KEY_LEFT:
             grid.move(Grid2048::LEFT);

@@ -50,7 +50,7 @@ int Grid2048::operator() (int yIn, int xIn) const{
     return static_cast<int&>(_table[(yIn * x) + xIn]);
 }
 
-Grid2048& Grid2048::generateSquare(){
+Grid2048& Grid2048::generateSquare() noexcept{
     static std::mt19937 mt{ (std::mt19937::result_type)std::time(0)};
 
     std::uniform_int_distribution<> gridPosition(0, (x * y) - 1);
@@ -72,7 +72,7 @@ Grid2048& Grid2048::generateSquare(){
     }
     while(randNumber != copy);
 
-    throw std::runtime_error("cant write a square, game over");
+    assert(false && "cant write a square");
 }
 
 int *Grid2048::begin(){
@@ -294,14 +294,20 @@ bool Grid2048::moveUp() noexcept{
     }
 }
 
+bool Grid2048::stillPlayable() noexcept{
+    return ( isLegalToMove(LEFT) || isLegalToMove(RIGHT) || isLegalToMove(UP) || isLegalToMove(DOWN) );
+}
+
+bool Grid2048::hasLost() noexcept{
+    return !stillPlayable();
+}
+
 unsigned int Grid2048::getScore() const{
     return _score;
 }
 
 bool Grid2048::isLegalToMove(Grid2048::direction targetDirection) noexcept{
     try{
-
-
         switch (targetDirection) {
         case LEFT:
             for(int yi=0; yi < this->y; ++yi){
