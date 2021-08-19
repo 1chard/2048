@@ -51,7 +51,6 @@ int main(){
     mvprintw(1, 6, "%d", grid.getScore());
 
     gameWindow = drawWindow(grid);
-    //updateWindow(gameWindow, grid);
 
     int input;
     //main loop
