@@ -12,15 +12,7 @@ enum ColorsPair{
     P_BLUE,
     P_MAGENTA,
     P_YELLOW,
-
-    P_ORANGE = 64,
-    P_LIGHTBLUE,
-    P_DARKBLUE
-};
-enum ColorsExtra{
-    COLOR_ORANGE = 127,
-    COLOR_LIGHTBLUE,
-    COLOR_DARKBLUE
+    P_CYAN
 };
 
 WINDOW* drawWindow(const Grid2048&);

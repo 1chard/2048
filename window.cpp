@@ -5,6 +5,11 @@ int returnOverall = 0;
 
 void drawGridBorder(WINDOW*, const Grid2048&);
 void drawValues(WINDOW*, const Grid2048&);
+void attrmvwaddstr(attr_t attr, WINDOW* window, int y, int x, const char* ptr){
+    wattr_on(window, attr, NULL);
+    mvwaddstr(window, y, x, ptr);
+    wattr_off(window, attr, NULL);
+}
 
 void updateWindow(WINDOW* window, const Grid2048& grid){
     drawValues(window, grid);
@@ -59,7 +64,6 @@ void moveWindow(WINDOW** windowPtr, const Grid2048& grid, int* inputPtr){
 }
 
 void drawGridBorder(WINDOW* window, const Grid2048& gridTarget){
-    wattron(window, COLOR_PAIR(P_BLUE) | A_BOLD);
     //first create left border
     {
 
@@ -116,8 +120,6 @@ void drawGridBorder(WINDOW* window, const Grid2048& gridTarget){
 
         mvwaddch(window, (4 * Yi), (Xi * 7), ACS_LRCORNER);
     }
-
-    wattroff(window, COLOR_PAIR(P_BLUE) | A_BOLD);
 }
 
 void clearValue(WINDOW* window, int y, int x){
@@ -133,75 +135,45 @@ void drawValues(WINDOW* window, const Grid2048& grid){
             case 0: //just break
                 break;
             case 2:
-                mvwprintw(window, 2 + (y * 4), 3 + (x * 7), "2");
+                mvwaddstr(window, 2 + (y * 4), 3 + (x * 7), "2");
                 break;
             case 4:
-                wattron(window, COLOR_PAIR(P_YELLOW));
-                mvwprintw(window, 2 + (y * 4), 3 + (x * 7), "4");
-                wattroff(window, COLOR_PAIR(P_YELLOW));
+                attrmvwaddstr(COLOR_PAIR(P_YELLOW), window, 2 + (y * 4), 3 + (x * 7), "4");
                 break;
             case 8:
-                wattron(window, COLOR_PAIR(P_ORANGE));
-                mvwprintw(window, 2 + (y * 4), 3 + (x * 7), "8");
-                wattroff(window, COLOR_PAIR(P_ORANGE));
+                attrmvwaddstr(COLOR_PAIR(P_RED), window, 2 + (y * 4), 3 + (x * 7), "8");
                 break;
             case 16:
-                wattron(window, COLOR_PAIR(P_RED));
-                mvwprintw(window, 2 + (y * 4), 3 + (x * 7), "16");
-                wattroff(window, COLOR_PAIR(P_RED));
+                attrmvwaddstr(COLOR_PAIR(P_MAGENTA), window, 2 + (y * 4), 3 + (x * 7), "16");
                 break;
             case 32:
-                wattron(window, COLOR_PAIR(P_MAGENTA));
-                mvwprintw(window, 2 + (y * 4), 3 + (x * 7), "32");
-                wattroff(window, COLOR_PAIR(P_MAGENTA));
+                attrmvwaddstr(COLOR_PAIR(P_BLUE), window, 2 + (y * 4), 3 + (x * 7), "32");
                 break;
             case 64:
-                wattron(window, COLOR_PAIR(P_DARKBLUE));
-                mvwprintw(window, 2 + (y * 4), 3 + (x * 7), "64");
-                wattroff(window, COLOR_PAIR(P_DARKBLUE));
+                attrmvwaddstr(COLOR_PAIR(P_CYAN), window, 2 + (y * 4), 3 + (x * 7), "64");
                 break;
             case 128:
-                wattron(window, COLOR_PAIR(P_LIGHTBLUE));
-                mvwprintw(window, 2 + (y * 4), 2 + (x * 7), "128");
-                wattroff(window, COLOR_PAIR(P_LIGHTBLUE));
+                attrmvwaddstr(COLOR_PAIR(P_GREEN), window, 2 + (y * 4), 2 + (x * 7), "128");
                 break;
             case 256:
-                wattron(window, COLOR_PAIR(P_YELLOW) | A_BOLD);
-                mvwprintw(window, 2 + (y * 4), 2 + (x * 7), "256");
-                wattroff(window, COLOR_PAIR(P_YELLOW) | A_BOLD);
+                attrmvwaddstr(COLOR_PAIR(P_YELLOW) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "256");
                 break;
             case 512:
-                wattron(window, COLOR_PAIR(P_ORANGE) | A_BOLD);
-                mvwprintw(window, 2 + (y * 4), 2 + (x * 7), "512");
-                wattroff(window, COLOR_PAIR(P_ORANGE) | A_BOLD);
+                attrmvwaddstr(COLOR_PAIR(P_RED) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "512");
                 break;
             case 1024:
-                wattron(window, COLOR_PAIR(P_RED) | A_BOLD);
-                mvwprintw(window, 2 + (y * 4), 2 + (x * 7), "1024");
-                wattroff(window, COLOR_PAIR(P_RED) | A_BOLD);
+                attrmvwaddstr(COLOR_PAIR(P_MAGENTA) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "1024");
                 break;
             case 2048:
-                wattron(window, COLOR_PAIR(P_MAGENTA) | A_BOLD);
-                mvwaddch(window, 2 + (y * 4), 2 + (x * 7), '2');
-                wattroff(window, COLOR_PAIR(P_MAGENTA));
-
-                wattron(window, COLOR_PAIR(P_LIGHTBLUE) | A_BOLD);
-                mvwaddch(window, 2 + (y * 4), 3 + (x * 7), '0');
-                wattroff(window, COLOR_PAIR(P_LIGHTBLUE));
-
-                wattron(window, COLOR_PAIR(P_GREEN) | A_BOLD);
-                mvwaddch(window, 2 + (y * 4), 4 + (x * 7), '4');
-                wattroff(window, COLOR_PAIR(P_GREEN));
-
-                wattron(window, COLOR_PAIR(P_ORANGE) | A_BOLD);
-                mvwaddch(window, 2 + (y * 4), 5 + (x * 7), '8');
-                wattroff(window, COLOR_PAIR(P_ORANGE) | A_BOLD);
-
+                attrmvwaddstr(COLOR_PAIR(P_RED) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "2");
+                attrmvwaddstr(COLOR_PAIR(P_MAGENTA) | A_BOLD , window, 2 + (y * 4), 3 + (x * 7), "0");
+                attrmvwaddstr(COLOR_PAIR(P_CYAN) | A_BOLD , window, 2 + (y * 4), 4 + (x * 7), "4");
+                attrmvwaddstr(COLOR_PAIR(P_GREEN) | A_BOLD , window, 2 + (y * 4), 5 + (x * 7), "8");
                 break;
             default:
-                wattron(window, COLOR_PAIR(P_BLUE) | A_BOLD);
+                wattron(window, COLOR_PAIR(P_CYAN) | A_BOLD);
                 mvwprintw(window, 2 + (y * 4), 2 + (x * 7), "%d", grid(y, x));
-                wattroff(window, COLOR_PAIR(P_BLUE) | A_BOLD);
+                wattroff(window, COLOR_PAIR(P_CYAN) | A_BOLD);
                 break;
             }
         }

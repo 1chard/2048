@@ -30,18 +30,12 @@ int main(){
     keypad(stdscr, true);
     start_color();
 
-    init_color(COLOR_ORANGE, 1000, 600, 0);
-    init_color(COLOR_LIGHTBLUE, 500, 1000, 1000);
-    init_color(COLOR_DARKBLUE, 0, 0, 600);
-
     init_pair(P_GREEN, COLOR_GREEN, COLOR_BLACK);
     init_pair(P_YELLOW, COLOR_YELLOW, COLOR_BLACK);
     init_pair(P_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(P_RED, COLOR_RED, COLOR_BLACK);
     init_pair(P_BLUE, COLOR_BLUE, COLOR_BLACK);
-    init_pair(P_ORANGE, COLOR_ORANGE, COLOR_BLACK);
-    init_pair(P_LIGHTBLUE, COLOR_LIGHTBLUE, COLOR_BLACK);
-    init_pair(P_DARKBLUE, COLOR_DARKBLUE, COLOR_BLACK);
+    init_pair(P_CYAN, COLOR_CYAN, COLOR_BLACK);
 
     wrefresh(stdscr);
 
