@@ -1,7 +1,7 @@
 #ifndef DJKAPERMCXZ_H
 #define DJKAPERMCXZ_H
 
-#include "2048.h"
+#include "lib2048/2048.h"
 #include <ncurses/curses.h>
 
 extern int returnOverall;

@@ -1,4 +1,4 @@
-#include "2048.h"
+#include "lib2048/2048.h"
 #include "window.h"
 #include <csignal>
 #include <iostream>
