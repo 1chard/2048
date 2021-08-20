@@ -1,0 +1,3 @@
+[submodule "lib2048"]
+	path = lib2048
+	url = https://github.com/1chard/lib2048
