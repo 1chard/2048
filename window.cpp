@@ -1,7 +1,4 @@
 #include "window.h"
-#define NULL __null //idk why qt creator is saying NULL is undefined
-
-int returnOverall = 0;
 
 void drawGridBorder(WINDOW*, const Grid2048&);
 void drawValues(WINDOW*, const Grid2048&);
@@ -17,9 +14,9 @@ void updateWindow(WINDOW* window, const Grid2048& grid){
     wrefresh(window);
 }
 
-WINDOW* drawWindow(const Grid2048& grid){
+WINDOW* drawWindow(const Grid2048& grid, WINDOW* baseWindow){
     WINDOW* toReturn;
-    toReturn = newwin(1 + (4 * grid.y), 1 + (7 * grid.x), (getmaxy(stdscr) - (4 * grid.y))/ 2, (getmaxx(stdscr) - (7 * grid.x))/ 2);
+    toReturn = newwin(1 + (4 * grid.y), 1 + (7 * grid.x), (getmaxy(baseWindow) - (4 * grid.y))/ 2, (getmaxx(baseWindow) - (7 * grid.x))/ 2);
     drawGridBorder(toReturn, grid);
     updateWindow(toReturn, grid);
 
@@ -139,42 +136,42 @@ void drawValues(WINDOW* window, const Grid2048& grid){
                 mvwaddstr(window, 2 + (y * 4), 3 + (x * 7), "2");
                 break;
             case 4:
-                attrmvwaddstr(COLOR_PAIR(P_YELLOW), window, 2 + (y * 4), 3 + (x * 7), "4");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_YELLOW), window, 2 + (y * 4), 3 + (x * 7), "4");
                 break;
             case 8:
-                attrmvwaddstr(COLOR_PAIR(P_RED), window, 2 + (y * 4), 3 + (x * 7), "8");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_RED), window, 2 + (y * 4), 3 + (x * 7), "8");
                 break;
             case 16:
-                attrmvwaddstr(COLOR_PAIR(P_MAGENTA), window, 2 + (y * 4), 3 + (x * 7), "16");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_MAGENTA), window, 2 + (y * 4), 3 + (x * 7), "16");
                 break;
             case 32:
-                attrmvwaddstr(COLOR_PAIR(P_BLUE), window, 2 + (y * 4), 3 + (x * 7), "32");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_BLUE), window, 2 + (y * 4), 3 + (x * 7), "32");
                 break;
             case 64:
-                attrmvwaddstr(COLOR_PAIR(P_CYAN), window, 2 + (y * 4), 3 + (x * 7), "64");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_CYAN), window, 2 + (y * 4), 3 + (x * 7), "64");
                 break;
             case 128:
-                attrmvwaddstr(COLOR_PAIR(P_GREEN), window, 2 + (y * 4), 2 + (x * 7), "128");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_GREEN), window, 2 + (y * 4), 2 + (x * 7), "128");
                 break;
             case 256:
-                attrmvwaddstr(COLOR_PAIR(P_YELLOW) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "256");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_YELLOW) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "256");
                 break;
             case 512:
-                attrmvwaddstr(COLOR_PAIR(P_RED) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "512");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_RED) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "512");
                 break;
             case 1024:
-                attrmvwaddstr(COLOR_PAIR(P_MAGENTA) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "1024");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_MAGENTA) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "1024");
                 break;
             case 2048:
-                attrmvwaddstr(COLOR_PAIR(P_RED) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "2");
-                attrmvwaddstr(COLOR_PAIR(P_MAGENTA) | A_BOLD , window, 2 + (y * 4), 3 + (x * 7), "0");
-                attrmvwaddstr(COLOR_PAIR(P_CYAN) | A_BOLD , window, 2 + (y * 4), 4 + (x * 7), "4");
-                attrmvwaddstr(COLOR_PAIR(P_GREEN) | A_BOLD , window, 2 + (y * 4), 5 + (x * 7), "8");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_RED) | A_BOLD , window, 2 + (y * 4), 2 + (x * 7), "2");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_MAGENTA) | A_BOLD , window, 2 + (y * 4), 3 + (x * 7), "0");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_CYAN) | A_BOLD , window, 2 + (y * 4), 4 + (x * 7), "4");
+                attrmvwaddstr(COLOR_PAIR(WindowGrid::P_GREEN) | A_BOLD , window, 2 + (y * 4), 5 + (x * 7), "8");
                 break;
             default:
-                wattron(window, COLOR_PAIR(P_CYAN) | A_BOLD);
+                wattron(window, COLOR_PAIR(WindowGrid::P_CYAN) | A_BOLD);
                 mvwprintw(window, 2 + (y * 4), 2 + (x * 7), "%d", grid(y, x));
-                wattroff(window, COLOR_PAIR(P_CYAN) | A_BOLD);
+                wattroff(window, COLOR_PAIR(WindowGrid::P_CYAN) | A_BOLD);
                 break;
             }
         }

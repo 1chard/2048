@@ -3,14 +3,15 @@
 #include <csignal>
 #include <iostream>
 
+int returnOverall;
+
 int main(){
 
     static Grid2048 grid;
-    static WINDOW* gameWindow;
 
     {
         int result = std::atexit( []() -> void{
-            delwin(gameWindow);
+            //delwin(gameWindow);
             endwin();
         });
 
@@ -33,21 +34,15 @@ int main(){
     start_color();
     set_escdelay(100);
 
-    init_pair(P_GREEN, COLOR_GREEN, COLOR_BLACK);
-    init_pair(P_YELLOW, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(P_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(P_RED, COLOR_RED, COLOR_BLACK);
-    init_pair(P_BLUE, COLOR_BLUE, COLOR_BLACK);
-    init_pair(P_CYAN, COLOR_CYAN, COLOR_BLACK);
-
     refresh();
+    WindowGrid::init_colors();
 
     grid.generateSquare().generateSquare();
+    static WindowGrid gameWindow(grid);
 
     mvaddstr(0, 5, "Score:");
     mvprintw(1, 6, "%d", grid.getScore());
 
-    gameWindow = drawWindow(grid);
 
     int input;
     //main loop
@@ -62,12 +57,7 @@ int main(){
 
         input = getch();
 
-        mvprintw(0,0, "   ");
-        mvprintw(0,0, "%d", input);
-
-
 redoWithoutGetch:;
-
 
         switch (input) {
         case KEY_LEFT:
@@ -83,16 +73,16 @@ redoWithoutGetch:;
             grid.move(Grid2048::DOWN);
             break;
         case KEY_RESIZE:
-            moveWindow(&gameWindow, grid, &input);
+            gameWindow.move(&input);
             goto redoWithoutGetch;
         case 27:
             clear();
             refresh();
-            mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2, "ffff");
+            mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2, "PAUSE");
 
             while(input = getch(), input != 27);
 
-            moveWindow(&gameWindow, grid, &input);
+            gameWindow.move(&input);
             goto redoWithoutGetch;
 
         default:
