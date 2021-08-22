@@ -5,6 +5,7 @@ int returnOverall = 0;
 
 void drawGridBorder(WINDOW*, const Grid2048&);
 void drawValues(WINDOW*, const Grid2048&);
+
 void attrmvwaddstr(attr_t attr, WINDOW* window, int y, int x, const char* ptr){
     wattr_on(window, attr, NULL);
     mvwaddstr(window, y, x, ptr);

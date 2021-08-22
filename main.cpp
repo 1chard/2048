@@ -4,6 +4,7 @@
 #include <iostream>
 
 int main(){
+
     static Grid2048 grid;
     static WINDOW* gameWindow;
 
@@ -15,7 +16,7 @@ int main(){
 
         if(result){
             std::cout << "Error: internal error.\n";
-            std::terminate();
+            std::abort();
         }
     }
 
@@ -27,8 +28,10 @@ int main(){
     noecho();
     cbreak();
     curs_set(0);
+    nonl();
     keypad(stdscr, true);
     start_color();
+    set_escdelay(100);
 
     init_pair(P_GREEN, COLOR_GREEN, COLOR_BLACK);
     init_pair(P_YELLOW, COLOR_YELLOW, COLOR_BLACK);
@@ -37,7 +40,7 @@ int main(){
     init_pair(P_BLUE, COLOR_BLUE, COLOR_BLACK);
     init_pair(P_CYAN, COLOR_CYAN, COLOR_BLACK);
 
-    wrefresh(stdscr);
+    refresh();
 
     grid.generateSquare().generateSquare();
 
@@ -59,6 +62,10 @@ int main(){
 
         input = getch();
 
+        mvprintw(0,0, "   ");
+        mvprintw(0,0, "%d", input);
+
+
 redoWithoutGetch:;
 
 
@@ -78,6 +85,16 @@ redoWithoutGetch:;
         case KEY_RESIZE:
             moveWindow(&gameWindow, grid, &input);
             goto redoWithoutGetch;
+        case 27:
+            clear();
+            refresh();
+            mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2, "ffff");
+
+            while(input = getch(), input != 27);
+
+            moveWindow(&gameWindow, grid, &input);
+            goto redoWithoutGetch;
+
         default:
             //try again
             continue;

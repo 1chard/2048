@@ -8,5 +8,5 @@ set(CMAKE_CXX_FLAGS -lncurses)
 
 add_subdirectory(lib2048)
 
-add_executable(2048curses window.cpp main.cpp)
+add_executable(2048curses window.cpp main.cpp menu.cpp)
 target_link_libraries(2048curses PUBLIC 2048)
