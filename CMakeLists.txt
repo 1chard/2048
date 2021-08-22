@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS -lncurses)
 
+
 add_subdirectory(lib2048)
 
 add_executable(2048curses window.cpp main.cpp menu.cpp)

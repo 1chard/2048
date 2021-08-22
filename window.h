@@ -2,7 +2,7 @@
 #define DJKAPERMCXZ_H
 
 #include "lib2048/2048.h"
-#include <ncurses/curses.h>
+#include <curses.h>
 
 WINDOW* drawWindow(const Grid2048&, WINDOW* baseWindow = stdscr);
 void moveWindow(WINDOW**, const Grid2048&, int*);
