@@ -7,16 +7,25 @@
 struct MenuItem{
     int y, x;
     std::string name;
-    void* (*action)(...);
+    void* (*action)();
 };
 
 class Menu{
 public:
-    Menu(WINDOW* window = stdscr){
+    Menu(WINDOW* window = stdscr):
+    arrayOfMenus(new MenuItem[8])
+    {
 
     }
 
+    ~Menu(){
+        delete[] arrayOfMenus;
+    }
+
+
 private:
+    MenuItem* arrayOfMenus;
+
     int positionY, positionX;
     int y, x;
 };

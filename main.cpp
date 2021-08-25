@@ -1,5 +1,6 @@
 #include "lib2048/2048.h"
 #include "window.h"
+#include "menu.h"
 #include <csignal>
 #include <iostream>
 
@@ -7,11 +8,10 @@ int returnOverall;
 
 int main(){
 
-    static Grid2048 grid;
+
 
     {
         int result = std::atexit( []() -> void{
-            //delwin(gameWindow);
             endwin();
         });
 
@@ -37,12 +37,11 @@ int main(){
     refresh();
     WindowGrid::init_colors();
 
+    static Grid2048 grid;
+
     grid.generateSquare().generateSquare();
-    static WindowGrid gameWindow(grid);
 
-    mvaddstr(0, 5, "Score:");
-    mvprintw(1, 6, "%d", grid.getScore());
-
+    static Layout layout(grid);
 
     int input;
     //main loop
@@ -72,25 +71,20 @@ redoWithoutGetch:;
         case KEY_DOWN:
             grid.move(Grid2048::DOWN);
             break;
-        case KEY_RESIZE:
-            gameWindow.move(&input);
-            goto redoWithoutGetch;
         case 27:
             clear();
             refresh();
+
             mvprintw(getmaxy(stdscr) / 2, getmaxx(stdscr) / 2, "PAUSE");
 
             while(input = getch(), input != 27);
-
-            gameWindow.move(&input);
-            goto redoWithoutGetch;
-
+        case KEY_RESIZE:
+            layout.align();
         default:
             //try again
             continue;
         }
 
-        mvprintw(1, 6, "%d", grid.getScore());
-        updateWindow(gameWindow, grid);
+        layout.update();
     }
 }
