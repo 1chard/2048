@@ -1,4 +1,5 @@
 #include "window.h"
+#include "WindowGrid.h"
 
 namespace window{
 
